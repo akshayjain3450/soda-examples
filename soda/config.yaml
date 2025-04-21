@@ -1,70 +1,107 @@
-#variables:
-#  name: Customers UK
-#  table: city
-checks for city:
+checks for customer_360:
+  - row_count > 1:
+     name: Row count
+
+    #anomoly detection
+  - anomaly detection for missing_count(id):
+      missing values: ['null','NA']
+
+  - avg_order_spent between 5000 and 6000:
+      avg_order_spent expression: AVG(amount_spent)
+  - anomaly detection for avg_order_spent
+
+  - change for row_count between -20 and +50
+
+
+    #schema changes
+  - schema:
+      fail:
+        when schema changes: any
+        when forbidden column present:
+          - mail_a*
+        when wrong column type:
+          age: bigint
+
+  - duplicate_count(email_id) < 50
+
+    #filter with failed rows
+  - max(amount_spent) < 5000:
+      name: Too many spent
+      filter: marital_status = 'Single'
+  - failed rows:
+      samples limit: 50
+      fail condition: age = 61
+
+    # In-check filter
+  - max(number_of_children) < 1:
+      name: Childrens without marriage
+      filter: marital_status = 'Single'
+
+  - row_count = 6
+  - missing_count(id) = 2
+
+    # numeric
+  - avg(amount_spent) between 1000 and 6000
+  - avg_length(employment_status) > 10
+  - duplicate_count(id) = 0
+  - duplicate_percent(id) < 2%
+  - max(order_count) <= 18
+  - max_length(employment_status) = 25
+  - min(order_count) >= 1
+  - min_length(employment_status) = 5
   - row_count > 0
-#  - group by:
-#      group_limit: 50
-#      name: max zip_code by state
-#      query: >-
-#        select state_code, max(zip_code) as max_zip_code from city group by
-#        state_code
-#      fields:
-#        - state_code
-#      checks:
-#        - max_zip_code:
-#            fail: when < 100000
-#            name: max zip_code by state
-#  - change for row_count between -20 and +50
-#  - change percent for row_count < 50%
-#  - change same day last week for row_count > 10
-#  - anomaly detection for row_count
-#  - row_count < 0:
-#      name: 'Row count in ${name}'
-#      filter: city_name = 'Verbena'
-#      attributes:
-#        key1: value1
-#  - row_count same as customer
-#  - failed rows:
-#      samples limit: 2
-#      fail condition: state_code = 'AL'
-#  - failed rows:
-#      fail query: |
-#        SELECT DISTINCT state_code
-#        FROM city as city
-#filter customer [daily]:
-#  where: age >= 10
-#checks for customer [daily]:
-#  - row_count = 53
-#  - freshness(ts_customer) < 3d
-#  - duplicate_count(age) > 1000:
-#        name: sample001
-#        samples limit: 1
-#  - values in (city_id) must exist in city (city_id)
-#  - schema:
-#      warn:
-#        when forbidden column present:
-#          - mailing_street
-#        when wrong column type:
-#          lifestyle: varchar
-#      fail:
-#        when forbidden column present:
-#          - mail_a*
-#        when wrong column type:
-#          age: bigint
-#  - avg_age between 30 and 50:
-#      avg_age expression: AVG(age)
-#for each dataset T:
-#  datasets:
-#    - pr%
-#    - pos%
-#    - exclude pos_tx%
-#  checks:
-#    - row_count > 0
-#discover datasets:
-#  datasets:
-#    - include %
-#profile columns:
-#  columns:
-#    - customer.%
-#    - city.%
+#  - percentile(order_count, 0.95) > 1
+
+#  - stddev(order_count) > 0
+#  - stddev_pop(order_count) between 3 and 4
+#  - stddev_samp(order_count) not between 3 and 4
+  - sum(order_count) < 120
+#  - variance(order_count) > 0
+#  - var_pop(order_count) between 0 and 5
+#  - var_samp(order_count) not between 0 and 5
+
+    # validity
+
+  - invalid_count(email_id) = 0:
+        valid format: email
+  - invalid_percent(email_id) = 0:
+      valid length: 35
+  - invalid_percent(number_of_children) <= 2:
+      valid max: 6
+  - invalid_percent(marital_status) = 0:
+      valid max length: 10
+  - invalid_count(number_of_children) = 0:
+      valid min: 1
+  - invalid_percent(marital_status) = 0:
+      valid min length: 1
+  - invalid_percent(last_name) < 5%:
+      invalid regex: (?:XX)
+  - invalid_count(gender) = 0:
+      valid values: ["Female","Male"]
+
+
+    # missing
+
+  - missing_count(last_name) < 5:
+      missing values: ['NA', 'n/a', '0']
+  - missing_count(first_name) = 0:
+      missing regex: (?:N/A)
+
+  - missing_percent(email_id) < 50:
+      samples limit: 2
+
+  - missing_count(gender) = 0:
+      missing values: ["Female"]
+
+    #freshness
+
+  - freshness(birthdate) < 3d
+  - freshness using ts_customer with NOW < 1d
+
+    # cross-checks
+  - row_count same as customer
+
+
+profile columns:
+  columns:
+    - customer_360.hobbies

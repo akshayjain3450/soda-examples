@@ -1,18 +1,10 @@
-data_source icebase:
-#    type: postgres
-#    host: localhost
-#    port: "54321"
-#    username: postgres
-#    password: postgres
-#    database: postgres
-#    schema: public
-
-    type: depot
-    address: 'dataos://icebase'
-    schema: retail
-    options:
-        clusterName: system
-    sampler:
-        exclude_columns:
-            retail_*: [password]
-            retail_customers: [last_name, pii_*]
+data_source sample_trino:
+  type: themis
+  host: tcp.pro-alien.dataos.app
+  port: 7432
+  username: akshayjain
+  password: "${PASSWORD}"
+  catalog: icebase
+  schema: retail
+  http_headers: {"cluster-name": "miniature"}
+  scheme: https
