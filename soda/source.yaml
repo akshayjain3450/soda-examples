@@ -1,5 +1,5 @@
 data_source sample_trino:
-  type: themis
+  type: trino
   host: tcp.pro-alien.dataos.app
   port: 7432
   username: akshayjain
