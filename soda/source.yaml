@@ -6,5 +6,5 @@ data_source sample_trino:
   password: "${DATAOS_RUN_AS_APIKEY}"
   catalog: icebase
   schema: retail
-  http_headers: {"cluster-name": "miniature"}
+  http_headers: {"cluster-name": "themisjawan"}
   scheme: https
