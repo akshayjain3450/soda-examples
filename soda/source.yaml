@@ -1,10 +1,10 @@
 data_source sample_trino:
-  type: trino
+  type: themis
   host: tcp.pro-alien.dataos.app
   port: 7432
   username: akshayjain
   password: "${DATAOS_RUN_AS_APIKEY}"
   catalog: icebase
   schema: retail
-  http_headers: {"cluster-name": "miniature"}
+  http_headers: {"cluster-name": "themiscluster"}
   scheme: https
