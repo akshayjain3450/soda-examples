@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from presidio_analyzer import LocalRecognizer, RecognizerResult, EntityRecognizer, AnalysisExplanation
 from presidio_analyzer.nlp_engine import NlpArtifacts
-from server.analyzer.analyzer import Analyzer
+from server.analyzer.column_analyzer import ColumnAnalyzer
 
 
 class HobbiesRecognizer(LocalRecognizer):
@@ -79,4 +79,4 @@ class HobbiesRecognizer(LocalRecognizer):
 
 
 # Set Recognizer in analyzer
-Analyzer.add_recognizer(HobbiesRecognizer())
+ColumnAnalyzer.add_recognizer(HobbiesRecognizer())
