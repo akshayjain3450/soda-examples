@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from presidio_analyzer import LocalRecognizer, RecognizerResult, EntityRecognizer, AnalysisExplanation
 from presidio_analyzer.nlp_engine import NlpArtifacts
-from soda.profiling.analyzer import Analyzer
+from server.analyzer.analyzer import Analyzer
 
 
 class HobbiesRecognizer(LocalRecognizer):
