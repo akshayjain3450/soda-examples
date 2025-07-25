@@ -1,10 +1,10 @@
 data_source sample_trino:
   type: trino
-  host: tcp.pro-alien.dataos.app
+  host: tcp.dataos-training.mydataos.com
   port: 7432
   username: akshayjain
   password: "${DATAOS_RUN_AS_APIKEY}"
-  catalog: icebase
-  schema: retail
+  catalog: lakehouse
+  schema: sales360
   http_headers: {"cluster-name": "miniature"}
   scheme: https
